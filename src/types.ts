@@ -1,9 +1,5 @@
-export interface FormInputsDto {
-  content: string;
-}
-
 export interface TodoDto {
-  id?: string;
+  id?: number;
   content: string;
-  isComplete: boolean;
+  isComplete: "0" | "1";
 }

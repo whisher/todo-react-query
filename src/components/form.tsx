@@ -1,7 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 
-import { FormInputsDto, TodoDto } from "../types";
+import { TodoDto } from "../types";
 
 const PlusIcon = () => {
   return (
@@ -24,15 +24,13 @@ const PlusIcon = () => {
 
 export interface FormProps {
   handleFormSubmit: (data: TodoDto) => void;
-  initialValues: TodoDto;
+  formValues: TodoDto;
 }
 
-const Form = ({ handleFormSubmit, initialValues }: FormProps) => {
-  const { errors, handleSubmit, register, reset } = useForm<FormInputsDto>();
-  const onSubmit = (inputs: FormInputsDto) => {
+const Form = ({ handleFormSubmit, formValues }: FormProps) => {
+  const { errors, handleSubmit, register, reset } = useForm<TodoDto>();
+  const onSubmit = (data: TodoDto) => {
     if (!errors.content) {
-      const { content } = inputs;
-      const data = { content, isComplete: false };
       handleFormSubmit(data);
       reset();
     }
@@ -44,12 +42,26 @@ const Form = ({ handleFormSubmit, initialValues }: FormProps) => {
           !!errors.content ? "border border-red-500" : "border border-white"
         } bg-white flex items-center rounded-full shadow-xl`}
       >
+        {formValues.id ? (
+          <input
+            type="hidden"
+            name="id"
+            ref={register({ required: true })}
+            defaultValue={formValues.id}
+          />
+        ) : null}
         <input
+          type="hidden"
+          name="isComplete"
+          ref={register({ required: true })}
+          defaultValue={formValues.isComplete}
+        />
+        <input
+          type="text"
           name="content"
           ref={register({ required: true })}
-          defaultValue={initialValues.content}
+          defaultValue={formValues.content}
           className="rounded-l-full w-full py-4 px-6 text-gray-500 leading-tight focus:outline-none"
-          type="text"
           placeholder="Write a new task"
         />
 

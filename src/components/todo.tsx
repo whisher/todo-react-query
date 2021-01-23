@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { TodoDto } from "../types";
 
@@ -40,26 +40,61 @@ const UpdateIcon = () => {
   );
 };
 export interface TodoProps {
+  handleIscompleteTodo: (data: TodoDto) => void;
+  handleUpdateTodo: (data: TodoDto) => void;
   todo: TodoDto;
 }
 
-const Todo = ({ todo }: TodoProps) => {
+const Todo = ({ handleIscompleteTodo, handleUpdateTodo, todo }: TodoProps) => {
+  const [visility, setVisibility] = useState<boolean>(false);
+  const mouseEnter = () => {
+    setVisibility(true);
+  };
+  const mouseLeave = () => {
+    setVisibility(false);
+  };
+  const onUpdateTodo = () => {
+    handleUpdateTodo(todo);
+  };
+  const onIsCompleteTodo = () => {
+    handleIscompleteTodo(todo);
+  };
   return (
-    <div className="w-full relative">
+    <div
+      onMouseEnter={mouseEnter}
+      onMouseLeave={mouseLeave}
+      className="w-full relative"
+    >
       <div
         className="w-full flex justify-start items-center rounded-full shadow-md
-        bg-white px-6 py-6"
+        bg-gray-50 px-6 py-6"
       >
-        <p className="text-gray-500 tracking-wide line-through">
+        <p
+          onClick={onIsCompleteTodo}
+          className={`text-gray-500 tracking-wide  ${
+            +todo.isComplete ? "line-through" : ""
+          }`}
+        >
           {todo.content}
         </p>
       </div>
-      <button className="absolute top-0.5 -right-4 bg-indigo-500 text-white rounded-full p-0 hover:bg-indigo-400 focus:outline-none w-8 h-8 flex items-center justify-center">
-        <UpdateIcon />
-      </button>
-      <button className="absolute bottom-0.5 -right-4 bg-red-500 text-white rounded-full p-0 hover:bg-red-400 focus:outline-none w-8 h-8 flex items-center justify-center">
-        <DeleteIcon />
-      </button>
+      <div
+        className={`transition-opacity ${
+          visility ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        {+todo.isComplete ? null : (
+          <button
+            onClick={onUpdateTodo}
+            className="absolute top-0 right-0 bg-indigo-500 text-white rounded-full p-0 hover:bg-indigo-400 focus:outline-none w-8 h-8 flex items-center justify-center"
+          >
+            <UpdateIcon />
+          </button>
+        )}
+        <button className="absolute bottom-0 right-0 bg-red-500 text-white rounded-full p-0 hover:bg-red-400 focus:outline-none w-8 h-8 flex items-center justify-center">
+          <DeleteIcon />
+        </button>
+      </div>
     </div>
   );
 };
