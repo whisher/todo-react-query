@@ -40,12 +40,18 @@ const UpdateIcon = () => {
   );
 };
 export interface TodoProps {
+  handleDeleteTodo: (data: TodoDto) => void;
   handleIscompleteTodo: (data: TodoDto) => void;
   handleUpdateTodo: (data: TodoDto) => void;
   todo: TodoDto;
 }
 
-const Todo = ({ handleIscompleteTodo, handleUpdateTodo, todo }: TodoProps) => {
+const Todo = ({
+  handleDeleteTodo,
+  handleIscompleteTodo,
+  handleUpdateTodo,
+  todo,
+}: TodoProps) => {
   const [visility, setVisibility] = useState<boolean>(false);
   const mouseEnter = () => {
     setVisibility(true);
@@ -53,12 +59,16 @@ const Todo = ({ handleIscompleteTodo, handleUpdateTodo, todo }: TodoProps) => {
   const mouseLeave = () => {
     setVisibility(false);
   };
-  const onUpdateTodo = () => {
-    handleUpdateTodo(todo);
+  const onDeleteTodo = () => {
+    handleDeleteTodo(todo);
   };
   const onIsCompleteTodo = () => {
     handleIscompleteTodo(todo);
   };
+  const onUpdateTodo = () => {
+    handleUpdateTodo(todo);
+  };
+
   return (
     <div
       onMouseEnter={mouseEnter}
@@ -91,7 +101,10 @@ const Todo = ({ handleIscompleteTodo, handleUpdateTodo, todo }: TodoProps) => {
             <UpdateIcon />
           </button>
         )}
-        <button className="absolute bottom-0 right-0 bg-red-500 text-white rounded-full p-0 hover:bg-red-400 focus:outline-none w-8 h-8 flex items-center justify-center">
+        <button
+          onClick={onDeleteTodo}
+          className="absolute bottom-0 right-0 bg-red-500 text-white rounded-full p-0 hover:bg-red-400 focus:outline-none w-8 h-8 flex items-center justify-center"
+        >
           <DeleteIcon />
         </button>
       </div>

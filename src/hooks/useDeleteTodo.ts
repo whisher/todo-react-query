@@ -1,9 +1,17 @@
 import axios from "axios";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
+import { TodoDto } from "../types";
 import { URL } from "../constants";
 
-export default function useDeleteTodo() {
-  return useMutation((todoId) =>
-    axios.delete(`${URL}/todos/${todoId}`).then((res) => res.data)
+const useDeleteTodo = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    (todo: TodoDto) =>
+      axios.delete(`${URL}/todos/${todo.id}`).then((res) => res.data),
+    {
+      onSuccess: () => queryClient.invalidateQueries("todos"),
+    }
   );
-}
+};
+
+export { useDeleteTodo };
